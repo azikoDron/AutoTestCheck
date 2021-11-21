@@ -1,0 +1,10 @@
+{
+  "case_1": {
+      "correct_data": ["13", "14253"],
+      "data_being_tested": [["4", "3"], ["5", "4"]]
+  },
+    "case_2": {
+      "correct_data": ["102"],
+      "data_being_tested": [["1 1", "5"], ["0 0", "1 6", "6 6"]]
+  }
+}
