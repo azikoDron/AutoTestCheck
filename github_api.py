@@ -10,7 +10,7 @@ class GitRepo(Github):
         self._user = self.get_user(self._repository[3])       # << self.get_user(repository[3])
         self._repo = self._user.get_repo(self._repository[4])
 
-    # def get_user(self):
+    # def get_user(self):z
     #     return self._git.get_user(self._repository[3])
 
     def content(self):
