@@ -13,6 +13,15 @@ class GitRepo(Github):
     # def get_user(self):z
     #     return self._git.get_user(self._repository[3])
 
+    def grab_path(self):
+        contents = self._repo.get_contents("")
+        while contents:
+            file_content = contents.pop(0)
+            if file_content.type == "dir":
+                contents.extend(self._repo.get_contents(file_content.path))
+            else:
+                print(file_content, file_content.type, file_content.content)
+
     def content(self):
         return self._repo.get_contents("")
 
@@ -21,10 +30,12 @@ class GitRepo(Github):
        # print(self._repo.get_)
 
 
-user1 = GitRepo("https://github.com/azikoDron/MyKivyApp")
+user1 = GitRepo("https://github.com/Atestov/TestTaskPL")
 user1.test()
-print(user1.content()[3])
-print(base64.b64decode(user1.content()[3].content.encode()).decode())
+
+user1.grab_path()
+# print(user1.content()[3])       #  #
+# print(base64.b64decode(user1.content()[3].content.encode()).decode())
 # user = g.get_user("azikoDron")
 # repo = user.get_repo("MyKivyApp")
 #
