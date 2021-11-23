@@ -117,7 +117,7 @@ class CreateTestCase:
                     d.write(z + '\n')
                 # d.write(str(b).replace("[", "").replace("]", "").replace(",", "").replace("'", ""))
                 case_files.append(f"test_files{os.sep}{i}{file_type}")
-        print(case_files)
+        # print(case_files)
         return case_files
 
 
@@ -153,6 +153,8 @@ for i in range(len(answer)):
     print(answer[i], 'n')
 
     """
+
     task_1_py = CreateTest(task_1_py, "python")
     test_case_1 = CreateTestCase()
-    print(test_case_1.test_case(task_1_py), test_case_1.create_case_file(), test_case_1.result_data)
+    print(test_case_1.test_case(task_1_py),
+          test_case_1.result_data)
