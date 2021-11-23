@@ -1,5 +1,4 @@
 # encoding=utf-8
-import sys
 import os
 import subprocess
 import logging
@@ -47,14 +46,6 @@ class CreateTest:
             inp += f" {i}"
         return subprocess.check_output(inp, shell=True, text=True)
 
-    # def run_check(self):
-    #     return os.system(self.get_cmd_param())
-    #
-
-    # def check_by_str(self, *args):
-    #     return os.system(f"python tmp{os.sep}{self.file_name}.py {args.}")
-    #
-
 
 class CreateTestCase:
     def __init__(self, case_num):
@@ -101,11 +92,12 @@ class CreateTestCase:
         if self.case_num in [3]:
             return self.test_3(obj)
 
-
     def get_result(self):
-        # print(self.result_data, self.correct_data)
         if self.result_data == self.correct_data:
+            _LOGGER.info(f"Результат теста Верно.")
             return True
+        _LOGGER.info(f"Результат теста Не верно!. Полученные результат: {self.result_data} \n "
+                     f"Ожидаемый результат: {self.correct_data}")
         return False
 
     def create_case_file(self, file_type=".txt"):
@@ -144,43 +136,6 @@ class CreateTestCase:
 
 
 if __name__ == '__main__':
-    task_1_py = """
-import sys
-import math
-
-data_file = sys.argv[1]
-total = 0
-steps = 0
-
-with open(data_file, 'r') as file:
-    arr = [int(x) for x in file]
-
-for item in arr:
-    total += item
-
-average = math.ceil(total / len(arr))
-
-for item in arr:
-    if item > average:
-        while(item != average):
-            steps += 1
-            item -= 1
-    elif item < average:
-        while(item != average):
-            steps += 1
-            item += 1
-    else:
-        continue
- 
-print(steps)
-    """
-
+    task_1_py = """ """
     task_1_py = CreateTest(task_1_py, "python")
-<<<<<<< HEAD
-    test_case_1 = CreateTestCase()
-    print(test_case_1.test_case(task_1_py),
-          test_case_1.result_data)
-=======
     test_case_1 = CreateTestCase(4)
-    print(test_case_1.run_test(task_1_py))
->>>>>>> b05dc0a18aa18979e3ae26650ad6f74bab71dcd3

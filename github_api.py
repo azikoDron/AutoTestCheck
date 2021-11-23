@@ -1,5 +1,4 @@
 from github import Github
-import base64
 
 
 class GitRepo(Github):
@@ -10,9 +9,6 @@ class GitRepo(Github):
         self._repo = self._user.get_repo(self._repository[4])
         self.language = self._repo.language
 
-    # def get_user(self):z
-    #     return self._git.get_user(self._repository[3])
-
     def grab_path(self):
         contents = self._repo.get_contents("")
         z = []
@@ -22,7 +18,6 @@ class GitRepo(Github):
                 contents.extend(self._repo.get_contents(file_content.path))
             else:
                 z.append([file_content.path, file_content.content])
-        print(z)
         return z
 
     def content(self):
@@ -31,17 +26,5 @@ class GitRepo(Github):
 
 if __name__ == '__main__':
     user1 = GitRepo("https://github.com/MalofeevAV/PL_test")
-    user1.grab_path()
-
-# print(user1.content()[3])       #  #
-# print(base64.b64decode(user1.content()[3].content.encode()).decode())
-# user = g.get_user("azikoDron")
-# repo = user.get_repo("MyKivyApp")
-#
-# print(repo.get_contents(""))
-
-# r = g.get_repo("https://github.com/azikoDron/MyKivyApp")
-
-# c = r
-#
-# print(c)
+    gr = user1.grab_path()
+    print(gr)
