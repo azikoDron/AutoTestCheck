@@ -57,47 +57,53 @@ class CreateTest:
 
 
 class CreateTestCase:
-    def __init__(self):
-        self.case_num = 1
+    def __init__(self, case_num):
+        self.case_num = case_num
         self.is_file_testing = True
         self.data_being_tested = self.load_data_being_tested()   # [['4', '3'], ['5', '4']]
         self.correct_data = self.load_correct_data()
         self.result_data = []
 
     def load_data_being_tested(self):
-        return self.load_params()["case_" + str(self.case_num)]["data_being_tested"]
+        return self.load_data_from_json()["case_" + str(self.case_num)]["data_being_tested"]
 
     def load_correct_data(self):
-        print(self.load_params()["case_" + str(self.case_num)]["correct_data"])
-        return self.load_params()["case_" + str(self.case_num)]["correct_data"]
+        return self.load_data_from_json()["case_" + str(self.case_num)]["correct_data"]
 
-    def load_params(self):
-        with open("test_cases.json", "r") as r:
+    def load_data_from_json(self, param_file="test_cases"):
+        with open(f"{param_file}.json", "r") as r:
             return json.load(r)
 
-    def test_case(self, obj):
+    def run_test(self, obj):
         """
 
         :param obj: объект класса CreateTest
         :return:
         """
-        try:
-            data = self.data_being_tested
-            if self.is_file_testing:
-                data = [self.create_case_file()]
-            for i, b in data:
-                res = ""
-                for u in obj.run_os_cmd(i, b):
-                    if u.isdigit():
-                        res += u
-                self.result_data.append(res)
-        except Exception as e:
-            if self.is_file_testing:
-                self.is_file_testing = False
-                self.test_case(obj)
+        if self.case_num in [1, 2, 4]:
+            try:
+                data = self.data_being_tested
+                if self.is_file_testing:
+                    data = [self.create_case_file()]
+                    if self.case_num == 4:
+                        return self.case_4(obj, data)
+                for i, b in data:
+                    res = ""
+                    for u in obj.run_os_cmd(i, b):
+                        if u.isdigit():
+                            res += u
+                    self.result_data.append(res)
+                return self.get_result()
+            except Exception as e:
+                if self.is_file_testing:
+                    self.is_file_testing = False
+                    return self.run_test(obj)
+        if self.case_num in [3]:
+            return self.test_3(obj)
+
 
     def get_result(self):
-        print(self.result_data, self.correct_data)
+        # print(self.result_data, self.correct_data)
         if self.result_data == self.correct_data:
             return True
         return False
@@ -120,41 +126,61 @@ class CreateTestCase:
         # print(case_files)
         return case_files
 
+    def test_3(self, obj):
+        data = self.data_being_tested
+        for i, b in data:
+            obj.run_os_cmd(f"test_files{os.sep}{i}", f"test_files{os.sep}{b}")
+            self.result_data.append(self.load_data_from_json(param_file="report"))
+            return self.get_result()
+
+    def case_4(self, obj, data):
+        for i in data[0]:
+            res = ""
+            for u in obj.run_os_cmd(i):
+                if u.isdigit():
+                    res += u
+            self.result_data.append(res)
+        return self.get_result()
+
 
 if __name__ == '__main__':
     task_1_py = """
-import math
 import sys
-import re
+import math
 
-with open('{}'.format(sys.argv[1]), 'r') as f1:
-    file1 = f1.read()
+data_file = sys.argv[1]
+total = 0
+steps = 0
 
-num_cor = re.findall(r'\d+', file1)
-a = float(num_cor[0])
-b = float(num_cor[1])
-r = float(num_cor[2])
-with open('{}'.format(sys.argv[2]), 'r') as f2:
-    file2 = f2.read()
+with open(data_file, 'r') as file:
+    arr = [int(x) for x in file]
 
-xy = re.findall(r'\d+', file2)
-answer = []
-for i in range(1, len(xy), 2):
-    x = float(xy[i - 1])
-    y = float(xy[i])
-    if math.sqrt((x - a) ** 2) + math.sqrt((y - b) ** 2) < math.sqrt(r ** 2):
-        answer.append(1)
-    elif math.sqrt((x - a) ** 2) + math.sqrt((y - b) ** 2) == math.sqrt(r ** 2):
-        answer.append(0)
+for item in arr:
+    total += item
+
+average = math.ceil(total / len(arr))
+
+for item in arr:
+    if item > average:
+        while(item != average):
+            steps += 1
+            item -= 1
+    elif item < average:
+        while(item != average):
+            steps += 1
+            item += 1
     else:
-        answer.append(2)
-
-for i in range(len(answer)):
-    print(answer[i], 'n')
-
+        continue
+ 
+print(steps)
     """
 
     task_1_py = CreateTest(task_1_py, "python")
+<<<<<<< HEAD
     test_case_1 = CreateTestCase()
     print(test_case_1.test_case(task_1_py),
           test_case_1.result_data)
+=======
+    test_case_1 = CreateTestCase(4)
+    print(test_case_1.run_test(task_1_py))
+>>>>>>> b05dc0a18aa18979e3ae26650ad6f74bab71dcd3
